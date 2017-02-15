@@ -1,13 +1,28 @@
 #!/bin/bash
+DBNAME='ariedelwp'
+DBINSTANCE='ariedel-wp'
+DBUSER='ariedel'
+DBPASS='Td1IjxTd1Ijx'
 
-name="ariedelwp"
-user="ariedel"
-pass="#ENTERPASSWORDHERE"
-dns="ariedelwp-db.ctgsackgk6na.us-east-1.rds.amazonaws.com"
+aws rds create-db-instance --db-instance-identifier $DBINSTANCE --db-instance-class db.t2.micro --db-name $DBNAME --engine mysql --master-username $DBUSER --master-user-password $DBPASS --allocated-storage 5  --vpc-security-group-ids sg-922e43ee --no-publicly-accessible
+echo "Launching db...please wait....\n"
+while true
+do
+  DBHOST=$(aws rds describe-db-instances | jq .DBInstances[].Endpoint.Address | tr -d '""' | grep $DBINSTANCE)
+  if [ $? -eq 0 ]; then
+	break;
+  else
+	echo "retrying after 3 sec..."
+	sleep 3
+  fi
+done
 
-aws rds create-db-instance --db-instance-identifier ariedel-wp --allocated-storage 20 --db-instance-class db.t2.micro --engine mysql --master-username $user --master-user-password $pass --vpc-security-group-ids sg-922e43ee --db-name $name --no-publicly-accessible
-
-sleep 6m
+cat <<EOF > startup.sh
+#!/bin/bash
+cd /var/www/html/
+sed -i 's/localhost/$DBHOST/g' wp-config.php 
+sed -i 's/username_here/$DBUSER/g' wp-config.php 
+sed -i 's/password_here/$DBPASS/g' wp-config.php 
+sed -i 's/database_name_here/$DBNAME/g' wp-config.php 
+EOF
 aws ec2 run-instances --image-id ami-6edd3078 --count 1 --instance-type t2.micro --key-name ariedel2 --security-groups "allow ssh and http" --user-data file://startup.sh
-
-#sleep 2400

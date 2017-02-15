@@ -1,9 +1,6 @@
 #!/bin/bash
 
-user = "ariedel"
-pass = "#ENTERPASSWORDHERE"
-name = "ariedel-wp"
-dns="ariedelwp-db.ctgsackgk6na.us-east-1.rds.amazonaws.com"
+
 sudo -i
 apt-get update
 apt-get install apache2 php php-mysql and libapache2-mod-php7.0 -y
@@ -19,7 +16,3 @@ cd /var/www/html
 cp wp-config-sample.php wp-config.php
 
 
-sed -i 's/localhost/ariedel-wp.ctgsackgk6na.us-east-1.rds.amazonaws.com/g' wp-config.php
-sed -i 's/database_name_here/ariedel-wp/g' wp-config.php
-sed -i 's/username_here/ariedel/g' wp-config.php
-sed -i 's/password_here/#ENTERPASSWORDHERE/g' wp-config.php
