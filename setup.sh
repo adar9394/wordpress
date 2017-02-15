@@ -1,8 +1,8 @@
 #!/bin/bash
-DBNAME='ariedelwp'
-DBINSTANCE='ariedel-wp'
-DBUSER='ariedel'
-DBPASS='Td1IjxTd1Ijx'
+DBNAME=''
+DBINSTANCE=''
+DBUSER=''
+DBPASS=''
 
 aws rds create-db-instance --db-instance-identifier $DBINSTANCE --db-instance-class db.t2.micro --db-name $DBNAME --engine mysql --master-username $DBUSER --master-user-password $DBPASS --allocated-storage 5  --vpc-security-group-ids sg-922e43ee --no-publicly-accessible
 echo "Launching db...please wait....\n"
