@@ -17,7 +17,7 @@ do
   fi
 done
 
-cat <<EOF > startup.sh
+cat <<EOF >> startup.sh
 #!/bin/bash
 cd /var/www/html/
 sed -i 's/localhost/$DBHOST/g' wp-config.php 
